@@ -11,7 +11,7 @@ reviews = db['reviews'].all()
 
 analyzer = SentimentIntensityAnalyzer()
 
-sentiment_by_stars = [[] for r in range(1,6)]
+sentiment_by_stars = [[] for _ in range(1,6)]
 
 for review in reviews:
     full_review = review['title'] + '. ' + review['review']

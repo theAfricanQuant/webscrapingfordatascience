@@ -12,7 +12,7 @@ for season in range(1, 9):
     soup = BeautifulSoup(r.text, 'html.parser')
     listing = soup.find('div', class_='eplist')
     for epnr, div in enumerate(listing.find_all('div', recursive=False)):
-        episode = "{}.{}".format(season, epnr + 1)
+        episode = f"{season}.{epnr + 1}"
         rating_el = div.find(class_='ipl-rating-star__rating')
         rating = float(rating_el.get_text(strip=True))
         print('Episode:', episode, '-- rating:', rating)

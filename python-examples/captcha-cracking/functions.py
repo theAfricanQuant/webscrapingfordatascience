@@ -58,9 +58,7 @@ def get_contours(image):
     # Sort by size, keep only the first NR_CHARACTERS
     contours = sorted(contours, key=lambda x: x['w'] * x['h'],
                       reverse=True)[:NR_CHARACTERS]
-    # Sort from left to right
-    contours = sorted(contours, key=lambda x: x['x'], reverse=False)
-    return contours
+    return sorted(contours, key=lambda x: x['x'], reverse=False)
 
 def extract_contour(image, contour, desired_width, threshold=1.7):
     mask = np.ones((image.shape[0], image.shape[1]), dtype="uint8") * 0
@@ -72,16 +70,23 @@ def extract_contour(image, contour, desired_width, threshold=1.7):
         # This contour is wider than expected, split it
         amount = ceil(result.shape[1] / desired_width)
         each_width = floor(result.shape[1] / amount)
-        # Note: indexing based on im[y1:y2, x1:x2]
-        results = [result[0:(result.shape[0] - 1), 
-                          (i * each_width):((i + 1) * each_width - 1)] \
-                   for i in range(amount)]
-        return results
+        return [
+            result[
+                0 : (result.shape[0] - 1),
+                (i * each_width) : ((i + 1) * each_width - 1),
+            ]
+            for i in range(amount)
+        ]
     return [result]
 
 def get_letters(image, contours):
     desired_size = (contours[-1]['x'] + contours[-1]['w'] - contours[0]['x']) \
                    / NR_CHARACTERS
-    masks = [m for l in [extract_contour(image, contour['c'], desired_size) \
-             for contour in contours] for m in l]
-    return masks
+    return [
+        m
+        for l in [
+            extract_contour(image, contour['c'], desired_size)
+            for contour in contours
+        ]
+        for m in l
+    ]

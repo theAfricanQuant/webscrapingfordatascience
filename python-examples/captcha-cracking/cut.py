@@ -19,12 +19,12 @@ for image_file in image_files:
     if len(letters) != NR_CHARACTERS:
         print('[!] Could not extract desired amount of characters')
         continue
-    if any([l.shape[0] < 10 or l.shape[1] < 10 for l in letters]):
+    if any(l.shape[0] < 10 or l.shape[1] < 10 for l in letters):
         print('[!] Some of the extracted characters are too small')
         continue
     for i, mask in enumerate(letters):
         letter = answer[i]
-        outfile = '{}_{}.png'.format(answer, i)
+        outfile = f'{answer}_{i}.png'
         outpath = os.path.join(LETTERS_FOLDER, letter)
         if not os.path.exists(outpath):
             makedirs(outpath)

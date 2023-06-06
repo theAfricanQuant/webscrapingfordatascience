@@ -34,10 +34,7 @@ def should_visit(base_url, url):
         return None
     ignore = ['Wikipedia:', 'Template:', 'File:', 'Talk:', 'Special:',
               'Template talk:', 'Portal:', 'Help:', 'Category:', 'index.php']
-    if any([i in full_url for i in ignore]):
-        # This is a page to be ignored
-        return None
-    return full_url
+    return None if any(i in full_url for i in ignore) else full_url
 
 def get_title_and_links(base_url, url):
     html = requests.get(url).text
@@ -46,8 +43,7 @@ def get_title_and_links(base_url, url):
     page_title = page_title.text if page_title else ''
     links = []
     for link in html_soup.find_all("a"):
-        link_url = should_visit(base_url, link.get('href'))
-        if link_url:
+        if link_url := should_visit(base_url, link.get('href')):
             links.append(link_url)
     return url, page_title, links
 

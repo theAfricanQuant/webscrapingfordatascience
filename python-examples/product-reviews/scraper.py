@@ -8,7 +8,7 @@ db = dataset.connect('sqlite:///reviews.db')
 
 review_url = 'https://www.amazon.com/hz/reviews-render/ajax/reviews/get/'
 product_id = '1449355730'
-start_url = 'https://www.amazon.com/product-reviews/{}/'.format(product_id)
+start_url = f'https://www.amazon.com/product-reviews/{product_id}/'
 
 session = requests.Session()
 session.headers.update({
@@ -33,7 +33,7 @@ def parse_reviews(reply):
         if not review_id:
             continue
         review_classes = ' '.join(html_soup.find(class_='review-rating').get('class'))
-        rating = re.search(r'a-star-(\d+)', review_classes).group(1)
+        rating = re.search(r'a-star-(\d+)', review_classes)[1]
         title = html_soup.find(class_='review-title').get_text(strip=True)
         review = html_soup.find(class_='review-text').get_text(strip=True)
         reviews.append({'review_id': review_id,
@@ -44,23 +44,22 @@ def parse_reviews(reply):
 
 def get_reviews(product_id, page):
     data = {
-        'sortBy':'',
-        'reviewerType':'all_reviews',
-        'formatType':'',
-        'mediaType':'',
-        'filterByStar':'all_stars',
-        'pageNumber':page,
-        'filterByKeyword':'',
-        'shouldAppend':'undefined',
-        'deviceType':'desktop',
-        'reftag':'cm_cr_getr_d_paging_btm_{}'.format(page),
-        'pageSize':10,
-        'asin':product_id,
-        'scope':'reviewsAjax0'
-        }
-    r = session.post(review_url + 'ref=' + data['reftag'], data=data)
-    reviews = parse_reviews(r.text)
-    return reviews
+        'sortBy': '',
+        'reviewerType': 'all_reviews',
+        'formatType': '',
+        'mediaType': '',
+        'filterByStar': 'all_stars',
+        'pageNumber': page,
+        'filterByKeyword': '',
+        'shouldAppend': 'undefined',
+        'deviceType': 'desktop',
+        'reftag': f'cm_cr_getr_d_paging_btm_{page}',
+        'pageSize': 10,
+        'asin': product_id,
+        'scope': 'reviewsAjax0',
+    }
+    r = session.post(f'{review_url}ref=' + data['reftag'], data=data)
+    return parse_reviews(r.text)
 
 page = 1
 while True:

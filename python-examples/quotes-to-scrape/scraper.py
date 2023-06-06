@@ -58,7 +58,7 @@ while True:
 
 # Now fetch out the author information
 for author_id in authors_seen:
-    url = urljoin(base_url, '/author/' + author_id)
+    url = urljoin(base_url, f'/author/{author_id}')
     print('Now scraping author:', url)
     r = requests.get(url)
     html_soup = BeautifulSoup(r.text, 'html.parser')

@@ -13,8 +13,11 @@ def get_forum_threads(url, max_pages=None):
         soup = BeautifulSoup(r.text, 'html.parser')
         content = soup.find(class_='content')
         links = content.find_all('a', attrs={'href': re.compile('^\/thread\/')})
-        threads_on_page = [a.get('href') for a in links \
-                if a.get('href') and not 'page' in a.get('href')]
+        threads_on_page = [
+            a.get('href')
+            for a in links
+            if a.get('href') and 'page' not in a.get('href')
+        ]
         threads += threads_on_page
         page += 1
         next_page = soup.find('li', class_='next')
@@ -38,8 +41,7 @@ def get_thread_posts(url, max_pages=None):
             user = user.get_text(strip=True)
             quotes = []
             for quote in post.find_all(class_='quote_header'):
-                quoted_user = quote.find('a', class_='user-link')
-                if quoted_user:
+                if quoted_user := quote.find('a', class_='user-link'):
                     quotes.append(quoted_user.get_text(strip=True))
             posts.append((user, quotes))
         page += 1
