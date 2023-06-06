@@ -28,7 +28,7 @@ print('Drawing graph...')
 squish = lambda x : 1 / (1 + 0.5**(20*(x-0.1)))
 
 colors = [(0, 0, squish(betweenness[n])) for n in G.nodes()]
-labels = dict((n, d['title']) for n, d in G.nodes(data=True))
+labels = {n: d['title'] for n, d in G.nodes(data=True)}
 positions = networkx.spring_layout(G)
 
 networkx.draw(G, positions, node_color=colors, edge_color='#AEAEAE')

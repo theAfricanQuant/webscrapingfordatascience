@@ -23,9 +23,7 @@ def scrape_books(html_soup, url):
 
 def scrape_book(html_soup, book_id):
     main = html_soup.find(class_='product_main')
-    book = {}
-    book['book_id'] = book_id
-    book['title'] = main.find('h1').get_text(strip=True)
+    book = {'book_id': book_id, 'title': main.find('h1').get_text(strip=True)}
     book['price'] = main.find(class_='price_color').get_text(strip=True)
     book['stock'] = main.find(class_='availability').get_text(strip=True)
     book['rating'] = ' '.join(main.find(class_='star-rating') \
@@ -49,7 +47,7 @@ def scrape_book(html_soup, book_id):
 # Scrape the pages in the catalogue
 url = base_url
 inp = input('Do you wish to re-scrape the catalogue (y/n)? ')
-while True and inp == 'y':
+while inp == 'y':
     print('Now scraping page:', url)
     r = requests.get(url)
     html_soup = BeautifulSoup(r.text, 'html.parser')
@@ -64,7 +62,7 @@ while True and inp == 'y':
 books = db['books'].find(order_by=['last_seen'])
 for book in books:
     book_id = book['book_id']
-    book_url = base_url + 'catalogue/{}'.format(book_id)
+    book_url = f'{base_url}catalogue/{book_id}'
     print('Now scraping book:', book_url)
     r = requests.get(book_url)
     r.encoding = 'utf-8'

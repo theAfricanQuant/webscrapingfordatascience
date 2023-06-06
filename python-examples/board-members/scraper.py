@@ -21,8 +21,10 @@ while True:
     if not pagenav:
         break
     companies = pagenav.find_next('table', class_='dataTable')
-    for link in companies.find_all('a', href=regex):
-        symbols.append(link.get('href').split('/')[-1])
+    symbols.extend(
+        link.get('href').split('/')[-1]
+        for link in companies.find_all('a', href=regex)
+    )
     page += 1
 
 print(symbols)

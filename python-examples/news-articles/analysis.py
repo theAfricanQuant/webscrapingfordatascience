@@ -19,7 +19,7 @@ for article in db['articles'].all():
     # Tokenize
     tokens = tokenizer.tokenize(text)
     # Remove stop words and small words
-    clean_tokens = [i for i in tokens if not i in stop_words]
+    clean_tokens = [i for i in tokens if i not in stop_words]
     clean_tokens = [i for i in clean_tokens if len(i) > 2]
     # Stem tokens
     stemmed_tokens = [p_stemmer.stem(i) for i in clean_tokens]

@@ -19,11 +19,10 @@ def get_results(airline_name):
     text = form_div.find_element_by_css_selector('input[type=text]')
     text.send_keys(airline_name)
     submit = form_div.find_element_by_css_selector('input[type=submit]')
-    submit.click()    
+    submit.click()
     table = driver.find_element_by_css_selector('table.datatable')
     table_html = table.get_attribute('outerHTML')
-    df = pandas.read_html(str(table_html))
-    return df
+    return pandas.read_html(str(table_html))
 
 df = get_results('Lufthansa')
 print(df)
